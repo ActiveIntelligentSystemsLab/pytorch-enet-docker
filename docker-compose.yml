@@ -1,0 +1,20 @@
+version: "2.3"
+services: 
+  pytorch-train:
+    container_name: pytorch-train
+    image: aisl/pytorch:latest
+    runtime: nvidia
+    command: python /root/PyTorch-ENet/main.py -m train --save-dir /root/PyTorch-ENet/save/ENet_CamVid_matsuzaki_20190921/ --name my_cityscapes_20190921 --dataset camvid --dataset-dir /tmp/dataset/CamVid/ --batch-size 8
+    volumes:
+      - ./PyTorch-ENet:/root/PyTorch-ENet
+      - /media/data/dataset/matsuzaki:/tmp/dataset
+    shm_size: 1G
+
+  tensorboard:
+    container_name: tensorboard
+    image: aisl/pytorch:latest
+    command: tensorboard --logdir /root/PyTorch-ENet/runs
+    ports:
+      - 60006:6006
+    volumes:
+      - ./PyTorch-ENet:/root/PyTorch-ENet
