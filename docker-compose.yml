@@ -4,7 +4,14 @@ services:
     container_name: pytorch-train
     image: aisl/pytorch:latest
     runtime: nvidia
-    command: python /root/PyTorch-ENet/main.py -m train --save-dir /root/PyTorch-ENet/save/ENet_CamVid_matsuzaki_20190921/ --name my_cityscapes_20190921 --dataset camvid --dataset-dir /tmp/dataset/CamVid/ --batch-size 8
+    build: .
+    command: >
+      python /root/PyTorch-ENet/main.py -m train 
+      --save-dir /root/PyTorch-ENet/save/ENet_CamVid_matsuzaki_20190921/ 
+      --name my_cityscapes_20190921 
+      --dataset camvid 
+      --dataset-dir /tmp/dataset/CamVid/ 
+      --batch-size 8
     volumes:
       - ./PyTorch-ENet:/root/PyTorch-ENet
       - /media/data/dataset/matsuzaki:/tmp/dataset
@@ -14,7 +21,33 @@ services:
     container_name: tensorboard
     image: aisl/pytorch:latest
     command: tensorboard --logdir /root/PyTorch-ENet/runs
+    build: .
     ports:
       - 60006:6006
     volumes:
       - ./PyTorch-ENet:/root/PyTorch-ENet
+
+  roscore:
+    container_name: roscore
+    network_mode: "host"
+    build: .
+    runtime: nvidia
+    image: aisl/pytorch:latest
+    command: roscore
+    environment:
+      - ROS_MASTER_URI=http://localhost:11311
+    volumes:
+      - ./catkin_ws/:/root/catkin_ws/
+      - ./PyTorch-ENet:/root/PyTorch-ENet
+    tty: true
+
+  bash:
+    container_name: bash
+    network_mode: "host"
+    build: .
+    image: aisl/pytorch:latest
+    entrypoint: bash
+    environment:
+      - ROS_MASTER_URI=http://localhost:11311
+    tty: true
+    #  bash -c "source /opt/ros/kinetic/setup.bash && roscore"
