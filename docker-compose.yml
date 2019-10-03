@@ -39,7 +39,9 @@ services:
     volumes:
       - ./catkin_ws/:/root/catkin_ws/
       - ./PyTorch-ENet:/root/PyTorch-ENet
+      - /media/data/dataset/matsuzaki:/tmp/dataset
     tty: true
+    shm_size: 1G
 
   bash:
     container_name: bash
