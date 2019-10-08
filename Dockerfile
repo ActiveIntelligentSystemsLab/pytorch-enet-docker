@@ -21,6 +21,11 @@ RUN apt-get update && apt install -y ros-kinetic-ros-base \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*rm 
 
+RUN apt-get install -y ros-kinetic-image-transport ros-kinetic-image-transport-plugins \
+    python-catkin-tools \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*rm
+
 # Initialize the ROS environment
 RUN rosdep init && rosdep update 
 
@@ -41,5 +46,17 @@ RUN cd /opt/pytorch/pytorch/ && mkdir build_libtorch && cd build_libtorch \
     && /opt/conda/bin/python ../tools/build_libtorch.py
 
 RUN echo 'alias pt-python="/opt/conda/bin/python $@"' >> ~/.bashrc
+
+# Set entry point
+RUN rm /ros_entrypoint.sh
+COPY ./ros_entrypoint.sh /ros_entrypoint.sh
+RUN chmod 777 /ros_entrypoint.sh
+
+RUN echo 'export TARGET_IP=$(LANG=C /sbin/ifconfig $network_if | grep -Eo '"'"'inet (addr:)?([0-9]*\.){3}[0-9]*'"'"' | grep -Eo '"'"'([0-9]*\.){3}[0-9]*'"'"')' >> ~/.bashrc
+RUN echo 'if [ -z "$TARGET_IP" ] ; then' >> ~/.bashrc
+RUN echo '      echo "ROS_IP is not set."' >> ~/.bashrc
+RUN echo '      else' >> ~/.bashrc
+RUN echo '            export ROS_IP=$TARGET_IP' >> ~/.bashrc
+RUN echo '            fi' >> ~/.bashrc
 
 ENTRYPOINT ["/ros_entrypoint.sh"]
