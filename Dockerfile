@@ -7,7 +7,7 @@ COPY requirements.txt /tmp
 
 RUN pip install -r /tmp/requirements.txt && rm -rf /tmp/requirements.txt
 
-RUN apt-get update && apt install -y lsb-release \
+RUN apt-get update && apt install -y lsb-release net-tools \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*rm 
 
@@ -16,12 +16,10 @@ RUN apt-get update && apt install -y lsb-release \
 RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' && \
     apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 
-#  Install ROS Melodic
-RUN apt-get update && apt install -y ros-kinetic-ros-base \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*rm 
-
-RUN apt-get install -y ros-kinetic-image-transport ros-kinetic-image-transport-plugins \
+RUN apt update &&  \
+    apt install -y  ros-kinetic-ros-base \
+                        ros-kinetic-image-transport \
+                        ros-kinetic-image-transport-plugins \
     python-catkin-tools \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*rm
@@ -52,6 +50,7 @@ RUN rm /ros_entrypoint.sh
 COPY ./ros_entrypoint.sh /ros_entrypoint.sh
 RUN chmod 777 /ros_entrypoint.sh
 
+RUN echo 'network_if=eth0' >> ~/.bashrc
 RUN echo 'export TARGET_IP=$(LANG=C /sbin/ifconfig $network_if | grep -Eo '"'"'inet (addr:)?([0-9]*\.){3}[0-9]*'"'"' | grep -Eo '"'"'([0-9]*\.){3}[0-9]*'"'"')' >> ~/.bashrc
 RUN echo 'if [ -z "$TARGET_IP" ] ; then' >> ~/.bashrc
 RUN echo '      echo "ROS_IP is not set."' >> ~/.bashrc
