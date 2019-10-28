@@ -4,3 +4,6 @@
 [submodule "catkin_ws/src/pytorch_enet_ros"]
 	path = catkin_ws/src/pytorch_enet_ros
 	url = https://github.com/ActiveIntelligentSystemsLab/pytorch_enet_ros
+[submodule "catkin_ws/src/aisl_utils"]
+	path = catkin_ws/src/aisl_utils
+	url = https://github.com/ActiveIntelligentSystemsLab/aisl_utils
