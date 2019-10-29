@@ -1,4 +1,4 @@
-NAME=aisl/pytorch
+NAME=aisl/pytorch-enet
 VERSION=latest
 CONTAINER_NAME=pytorch-enet
 
@@ -9,15 +9,6 @@ restart: stop start
 
 start:
 	docker start $(CONTAINER_NAME)
-run:
-	docker run -it \
-    		--runtime=nvidia \
-    		-v /media/data/dataset/matsuzaki:/tmp/dataset \
-    		-v /home/aisl/matsuzaki/PyTorch-ENet:/root/PyTorch-ENet \
-		-p 60006:6006 \
-		--shm-size 12G \
-		--name $(CONTAINER_NAME) \
-		$(NAME):$(VERSION)
 					
 contener=`docker ps -a -q`
 image=`docker images | awk '/^<none>/ { print $$3 }'`

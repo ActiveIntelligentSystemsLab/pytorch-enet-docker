@@ -60,7 +60,7 @@ services:
     build: .
     runtime: nvidia
     image: aisl/pytorch:latest
-    command: bash -c "cd /root/catkin_ws && catkin build"
+    entrypoint: bash -c "cd /root/catkin_ws && catkin build"
     environment:
       - ROS_MASTER_URI=http://pytorch-ros-master:11311
     volumes:
