@@ -23,7 +23,11 @@ docker-compose up tensorboard
 ```
 docker-compose up build
 ```
-2. Run a ROS node (`roslaunch pytorch_enet_ros pytorch_enet_ros.launch`)
+2. Launch `roscore`
+```
+docker-compose up pytorch-ros-master
+```
+3. Run a ROS node (`roslaunch pytorch_enet_ros pytorch_enet_ros.launch`)
 ```
 docker-compose up pytorch-ros-node
 ```
