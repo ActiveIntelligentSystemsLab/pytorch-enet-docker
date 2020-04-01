@@ -4,13 +4,13 @@ set -e
 g_setup=/opt/ros/$ROS_DISTRO/setup.bash
 l_setup=/root/catkin_ws/devel/setup.bash
 
-if [ ! -f $g_setup ]; then
+if [ -f "$g_setup" ]; then
   source $g_setup
 else
   echo "$g_setup not found"
 fi
 
-if [ ! -f $l_setup ]; then
+if [ -f "$l_setup" ]; then
   source $l_setup
 else
   echo "$l_setup not found"

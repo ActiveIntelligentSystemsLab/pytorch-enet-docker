@@ -48,7 +48,7 @@ RUN echo 'alias pt-python="/opt/conda/bin/python $@"' >> ~/.bashrc
 # Set entry point
 RUN rm /ros_entrypoint.sh
 COPY ./ros_entrypoint.sh /ros_entrypoint.sh
-RUN chmod 777 /ros_entrypoint.sh
+RUN chmod 755 /ros_entrypoint.sh
 
 RUN echo 'network_if=eth0' >> ~/.bashrc
 RUN echo 'export TARGET_IP=$(LANG=C /sbin/ifconfig $network_if | grep -Eo '"'"'inet (addr:)?([0-9]*\.){3}[0-9]*'"'"' | grep -Eo '"'"'([0-9]*\.){3}[0-9]*'"'"')' >> ~/.bashrc

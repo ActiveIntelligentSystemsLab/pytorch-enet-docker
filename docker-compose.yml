@@ -41,11 +41,11 @@ services:
       - master
     build: .
     runtime: nvidia
-    image: aisl/pytorch:latest
+    image: aisl/pytorch-enet:latest
     command: roslaunch pytorch_enet_ros pytorch_enet_ros.launch
     environment:
       - ROS_MASTER_URI=http://pytorch-ros-master:11311
-      - ROS_IP=172.24.0.3
+        #      - ROS_IP=172.24.0.3
     volumes:
       - ./catkin_ws/:/root/catkin_ws/
       - ./PyTorch-ENet:/root/PyTorch-ENet
@@ -55,18 +55,16 @@ services:
 
   catkin-build:
     container_name: catkin-build
-    depends_on:
-      - master
     build: .
     runtime: nvidia
-    image: aisl/pytorch:latest
-    entrypoint: bash -c "cd /root/catkin_ws && catkin build"
+    image: aisl/pytorch-enet:latest
+    command: bash -c "cd /root/catkin_ws && catkin build"
     environment:
-      - ROS_MASTER_URI=http://pytorch-ros-master:11311
+      - CMAKE_PREFIX_PATH=/opt/ros/kinetic:${CMAKE_PREFIX_PATH}
     volumes:
       - ./catkin_ws/:/root/catkin_ws/
       - ./PyTorch-ENet:/root/PyTorch-ENet
-      - /media/data/dataset/matsuzaki:/tmp/dataset
+        #  - /media/data/dataset/matsuzaki:/tmp/dataset
     tty: true
     shm_size: 1G
 
