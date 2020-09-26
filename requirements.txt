@@ -11,6 +11,6 @@ torch==1.0.0
 torchvision==0.2.1
 moviepy
 setuptools==41.0.0
-tensorflow==1.13.2
+tensorflow==1.15.4
 tensorboard==1.13.0
 tensorboardX==1.8
