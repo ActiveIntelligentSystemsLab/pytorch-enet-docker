@@ -2,7 +2,7 @@ version: "2.3"
 services: 
   pytorch-train:
     container_name: pytorch-train
-    image: aisl/pytorch:latest
+    image: aisl/pytorch-enet:latest
     runtime: nvidia
     build: .
     command: >
@@ -19,7 +19,7 @@ services:
 
   tensorboard:
     container_name: tensorboard
-    image: aisl/pytorch:latest
+    image: aisl/pytorch-enet:latest
     command: tensorboard --logdir /root/PyTorch-ENet/runs
     build: .
     ports:
@@ -41,7 +41,7 @@ services:
       - master
     build: .
     runtime: nvidia
-    image: aisl/pytorch:latest
+    image: aisl/pytorch-enet:latest
     command: roslaunch pytorch_enet_ros pytorch_enet_ros.launch
     environment:
       - ROS_MASTER_URI=http://pytorch-ros-master:11311
@@ -55,12 +55,10 @@ services:
 
   catkin-build:
     container_name: catkin-build
-    depends_on:
-      - master
     build: .
     runtime: nvidia
-    image: aisl/pytorch:latest
-    entrypoint: bash -c "cd /root/catkin_ws && catkin build"
+    image: aisl/pytorch-enet:latest
+    command: bash -c "cd /root/catkin_ws && catkin build"
     environment:
       - ROS_MASTER_URI=http://pytorch-ros-master:11311
     volumes:
