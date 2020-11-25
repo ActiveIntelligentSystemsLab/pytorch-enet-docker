@@ -8,23 +8,26 @@ make build
 ```
 
 ## Running the codes in the container
-1. Run a container and enter it.
+### Network training
+1. Example : Network training
 ```
-make run
+docker-compose up pytorch-train
+```
+2. Visualization using Tensorboard
+```
+docker-compose up tensorboard  
 ```
 
-2. Run a script inside the container
-  1. Example : Training with greenhouse
-  ```
-  cd /root/PyTorch-ENet
-  python train.py -m train --save-dir save/dir --name [model_name] --dataset greenhouse --dataset-dir dataset/dir --with-unlabeled
-  ```
-  1. Run tensorboard
-  ```
-  cd /root/PyTorch-ENet
-  tensorboard --logdir=./runs/  
-  ```
-You can now use `docker-compose` to launch both the training script and `tensorboard`.
+### ROS node
+1. Build (`catkin build`)
 ```
-docker-compose up
+docker-compose up build
+```
+2. Launch `roscore`
+```
+docker-compose up pytorch-ros-master
+```
+3. Run a ROS node (`roslaunch pytorch_enet_ros pytorch_enet_ros.launch`)
+```
+docker-compose up pytorch-ros-node
 ```

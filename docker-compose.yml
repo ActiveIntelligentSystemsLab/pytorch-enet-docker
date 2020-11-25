@@ -2,7 +2,7 @@ version: "2.3"
 services: 
   pytorch-train:
     container_name: pytorch-train
-    image: aisl/pytorch:latest
+    image: aisl/pytorch-enet:latest
     runtime: nvidia
     build: .
     command: >
@@ -19,7 +19,7 @@ services:
 
   tensorboard:
     container_name: tensorboard
-    image: aisl/pytorch:latest
+    image: aisl/pytorch-enet:latest
     command: tensorboard --logdir /root/PyTorch-ENet/runs
     build: .
     ports:
