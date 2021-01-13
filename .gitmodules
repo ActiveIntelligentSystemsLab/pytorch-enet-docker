@@ -1,6 +1,3 @@
-[submodule "PyTorch-ENet"]
-	path = PyTorch-ENet
-	url = https://github.com/ActiveIntelligentSystemsLab/PyTorch-ENet
 [submodule "catkin_ws/src/pytorch_enet_ros"]
 	path = catkin_ws/src/pytorch_enet_ros
 	url = https://github.com/ActiveIntelligentSystemsLab/pytorch_enet_ros
