@@ -1,5 +1,5 @@
 NAME=aisl/pytorch-enet
-VERSION=latest
+VERSION=20.03-py3
 CONTAINER_NAME=pytorch-enet
 
 build : 

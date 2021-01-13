@@ -1,11 +1,13 @@
 # FROM pytorch/pytorch:latest
-FROM nvcr.io/nvidia/pytorch:19.04-py3
-MAINTAINER ShigemichiMatsuzaki <matsuzaki@aisl.cs.tut.ac.jp>
+#FROM nvcr.io/nvidia/pytorch:19.04-py3
+FROM nvcr.io/nvidia/pytorch:20.03-py3
 
 WORKDIR /workspace
-COPY requirements.txt /tmp
+# avoid blocking in installation of tzdata
+ENV DEBIAN_FRONTEND=noninteractive
+#COPY requirements.txt /tmp
 
-RUN pip install -r /tmp/requirements.txt && rm -rf /tmp/requirements.txt
+#RUN pip install -r /tmp/requirements.txt && rm -rf /tmp/requirements.txt
 
 RUN apt-get update && apt install -y lsb-release net-tools \
     && apt-get clean \
@@ -17,10 +19,10 @@ RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main"
     apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 
 RUN apt update &&  \
-    apt install -y  ros-kinetic-ros-base \
-                        ros-kinetic-image-transport \
-                        ros-kinetic-image-transport-plugins \
-    python-catkin-tools \
+    apt install -y  ros-melodic-ros-base \
+                        ros-melodic-image-transport \
+                        ros-melodic-image-transport-plugins \
+    python-catkin-tools python-rosdep\
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*rm
 
@@ -30,12 +32,12 @@ RUN rosdep init && rosdep update
 # Set entry point
 COPY ./ros_entrypoint.sh /ros_entrypoint.sh
 RUN chmod 777 /ros_entrypoint.sh
-RUN echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
+RUN echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc
 
 # Set environment variables
-ENV PATH /opt/ros/kinetic/bin:/usr/local/mpi/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-ENV PYTHONPATH /opt/ros/kinetic/lib/python2.7/dist-packages:$PYTHONPATH
-ENV ROS_DISTRO kinetic
+ENV PATH /opt/ros/melodic/bin:/usr/local/mpi/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV PYTHONPATH /opt/ros/melodic/lib/python2.7/dist-packages:$PYTHONPATH
+ENV ROS_DISTRO melodic
 
 # Install LibTorch, a C++ API of PyTorch
 #  - Following the instruction in https://github.com/pytorch/pytorch/blob/master/docs/libtorch.rst

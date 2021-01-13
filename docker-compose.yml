@@ -2,7 +2,7 @@ version: "2.3"
 services: 
   pytorch-train:
     container_name: pytorch-train
-    image: aisl/pytorch-enet:latest
+    image: aisl/pytorch-enet:20.03-py3
     runtime: nvidia
     build: .
     command: >
@@ -41,7 +41,7 @@ services:
       - master
     build: .
     runtime: nvidia
-    image: aisl/pytorch-enet:latest
+    image: aisl/pytorch-enet:20.03-py3
     command: roslaunch pytorch_enet_ros pytorch_enet_ros.launch
     environment:
       - ROS_MASTER_URI=http://pytorch-ros-master:11311
@@ -57,10 +57,10 @@ services:
     container_name: catkin-build
     build: .
     runtime: nvidia
-    image: aisl/pytorch-enet:latest
-    command: bash -c "cd /root/catkin_ws && catkin build"
+    image: aisl/pytorch-enet:20.03-py3
+    command: bash -c "source /opt/ros/melodic/setup.bash && cd /root/catkin_ws && catkin build"
     environment:
-      - CMAKE_PREFIX_PATH=/opt/ros/kinetic:${CMAKE_PREFIX_PATH}
+      - CMAKE_PREFIX_PATH=/opt/ros/melodic:${CMAKE_PREFIX_PATH}
     volumes:
       - ./catkin_ws/:/root/catkin_ws/
       - ./PyTorch-ENet:/root/PyTorch-ENet
