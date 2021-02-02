@@ -58,7 +58,7 @@ services:
     build: .
     runtime: nvidia
     image: aisl/pytorch-enet:20.03-py3
-    command: bash -c "source /opt/ros/melodic/setup.bash && cd /root/catkin_ws && catkin build"
+    command: bash -c "source /opt/ros/melodic/setup.bash && cd /root/catkin_ws && catkin build -DCMAKE_BUILD_TYPE=Debug"
     environment:
       - CMAKE_PREFIX_PATH=/opt/ros/melodic:${CMAKE_PREFIX_PATH}
     volumes:
