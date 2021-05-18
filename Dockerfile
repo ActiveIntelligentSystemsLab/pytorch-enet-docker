@@ -60,4 +60,10 @@ RUN echo '      else' >> ~/.bashrc
 RUN echo '            export ROS_IP=$TARGET_IP' >> ~/.bashrc
 RUN echo '            fi' >> ~/.bashrc
 
+RUN apt update &&  \
+    apt install -y  ros-melodic-geometry2 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*rm
+ 
+
 ENTRYPOINT ["/ros_entrypoint.sh"]

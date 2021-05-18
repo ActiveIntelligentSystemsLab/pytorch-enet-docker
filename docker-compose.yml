@@ -28,7 +28,7 @@ services:
       - ./PyTorch-ENet:/root/PyTorch-ENet
 
   master:
-    container_name: pytorch-ros-master
+    container_name: master
     image: ros:kinetic-ros-core
     command: roscore
     environment:
@@ -42,9 +42,9 @@ services:
     build: .
     runtime: nvidia
     image: aisl/pytorch-enet:20.03-py3
-    command: roslaunch pytorch_enet_ros pytorch_enet_ros.launch
+    command: roslaunch pytorch_enet_ros pytorch_enet_ros.launch image:=/kinect2/qhd/image_color_rect
     environment:
-      - ROS_MASTER_URI=http://pytorch-ros-master:11311
+      - ROS_MASTER_URI=http://master:11311
         #      - ROS_IP=172.24.0.3
     volumes:
       - ./catkin_ws/:/root/catkin_ws/
@@ -67,18 +67,3 @@ services:
         #  - /media/data/dataset/matsuzaki:/tmp/dataset
     tty: true
     shm_size: 1G
-
-  rviz:
-    container_name: pytorch-ros-rviz
-    depends_on:
-      - master
-    image: osrf/ros:kinetic-desktop-full
-    command: rviz
-    environment:
-      - ROS_MASTER_URI=http://pytorch-ros-master:11311
-      - DISPLAY
-      - QT_X11_NO_MITSHM=1
-    volumes:
-      - $HOME/.Xauthority:/root/.Xauthority
-      - /tmp/.X11-unix:/tmp/.X11-unix:rw
-    tty: true
