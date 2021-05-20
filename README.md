@@ -1,5 +1,6 @@
 # enet-pytorch-docker
-Docker environment to use [PyTorch-ENet](https://github.com/davidtvs/PyTorch-ENet)
+
+Docker environment to use [pytorch_ros](https://github.com/ActiveIntelligentSystemsLab/pytorch_enet_ros/)
 
 # How to use
 ## Building the image
@@ -7,27 +8,23 @@ Docker environment to use [PyTorch-ENet](https://github.com/davidtvs/PyTorch-ENe
 make build
 ```
 
-## Running the codes in the container
-### Network training
-1. Example : Network training
-```
-docker-compose up pytorch-train
-```
-2. Visualization using Tensorboard
-```
-docker-compose up tensorboard  
-```
+## Running the ROS nodes in the container
 
-### ROS node
 1. Build (`catkin build`)
 ```
-docker-compose up build
+docker-compose up catkin-build
 ```
+
 2. Launch `roscore`
 ```
-docker-compose up pytorch-ros-master
+docker-compose up master
 ```
-3. Run a ROS node (`roslaunch pytorch_enet_ros pytorch_enet_ros.launch`)
+
+3. Run a ROS node (`roslaunch pytorch_ros pytorch_enet_ros.launch`)
 ```
-docker-compose up pytorch-ros-node
+docker-compose up pytorch-ros
 ```
+
+4. (Optional) Run `sh docker_ros_setup.sh` to set the environment variables in the host.
+   
+   If you want to run other nodes in the host and let them communicate with the nodes in the container, this is necessary.
