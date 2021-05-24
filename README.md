@@ -25,6 +25,6 @@ docker-compose up master
 docker-compose up pytorch-ros
 ```
 
-4. (Optional) Run `sh docker_ros_setup.sh` to set the environment variables in the host.
+4. (Optional) Run `source docker_ros_setup.sh` to set the environment variables in the host.
    
    If you want to run other nodes in the host and let them communicate with the nodes in the container, this is necessary.
