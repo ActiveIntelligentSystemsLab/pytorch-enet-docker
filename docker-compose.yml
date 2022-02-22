@@ -1,8 +1,8 @@
 version: "2.3"
 services: 
   master:
-    container_name: master
-    image: ros:kinetic-ros-core
+    container_name: pytorch-ros-master
+    image: ros:melodic-ros-core
     command: roscore
     environment:
       - ROS_MASTER_URI=http://localhost:11311
@@ -17,10 +17,26 @@ services:
     image: aisl/pytorch-enet:20.03-py3
     command: roslaunch pytorch_ros pytorch_enet_ros.launch image:=/kinect2/qhd/image_color_rect
     environment:
-      - ROS_MASTER_URI=http://master:11311
+      - ROS_MASTER_URI=http://pytorch-ros-master:11311
     volumes:
       - ./catkin_ws/:/root/catkin_ws/
       - /media/data/dataset/matsuzaki:/tmp/dataset
+    tty: true
+    shm_size: 1G
+
+  pytorch-online-ros:
+    container_name: pytorch-ros-online-node
+    depends_on:
+      - master
+    build: .
+    runtime: nvidia
+    image: aisl/pytorch-enet:20.03-py3
+    command: rosrun pytorch_ros pytorch_enet_ros_node.py
+    #command: which python3
+    environment:
+      - ROS_MASTER_URI=http://pytorch-ros-master:11311
+    volumes:
+      - ./catkin_ws/:/root/catkin_ws/
     tty: true
     shm_size: 1G
 
