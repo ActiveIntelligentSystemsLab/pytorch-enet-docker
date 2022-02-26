@@ -1,69 +1,75 @@
 # FROM pytorch/pytorch:latest
 #FROM nvcr.io/nvidia/pytorch:19.04-py3
-FROM nvcr.io/nvidia/pytorch:20.03-py3
+FROM nvcr.io/nvidia/pytorch:21.02-py3
 
 WORKDIR /workspace
 # avoid blocking in installation of tzdata
 ENV DEBIAN_FRONTEND=noninteractive
-#COPY requirements.txt /tmp
 
-#RUN pip install -r /tmp/requirements.txt && rm -rf /tmp/requirements.txt
+RUN apt-get update && apt install -y \
+  lsb-release \
+  net-tools \
+  libgl1-mesa-dev \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*rm 
+#
+# Install ROS via RoboStack, Conda-based ROS installation
+#
+ARG env_name=ros_env
+RUN conda init bash 
+RUN conda update -c defaults conda 
+RUN conda install -c conda-forge mamba 
+RUN mamba create -n ${env_name} --clone base
 
-RUN apt-get update && apt install -y lsb-release net-tools \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*rm 
+# Override default shell and use bash
+#SHELL ["conda", "run", "-n", "ros_env", "/bin/bash", "-c"]
 
-# Install ROS
-#  Add key
-RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' && \
-    apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+# Activate environment
+ENV CONDA_DEFAULT_ENV ${env_name}
 
-RUN apt update &&  \
-    apt install -y  ros-melodic-ros-base \
-                        ros-melodic-image-transport \
-                        ros-melodic-image-transport-plugins \
-    python-catkin-tools python-rosdep\
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*rm
+# Switch default environment
+RUN echo "conda activate ${env_name}" >> ~/.bashrc
+ENV PATH /opt/conda/envs/${env_name}/bin:$PATH
 
-# Initialize the ROS environment
-RUN rosdep init && rosdep update 
+# this adds the conda-forge channel to the new created environment configuration 
+RUN conda config --env --add channels conda-forge
+# and the robostack channels
+RUN conda config --env --add channels robostack
+RUN conda config --env --add channels robostack-experimental
 
-# Set entry point
-COPY ./ros_entrypoint.sh /ros_entrypoint.sh
-RUN chmod 777 /ros_entrypoint.sh
-RUN echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc
+# Install the version of ROS you are interested in:
+#RUN mamba install  
+RUN mamba install python=3.8
+RUN mamba install ros-noetic-desktop
 
-# Set environment variables
-ENV PATH /opt/ros/melodic/bin:/usr/local/mpi/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-ENV PYTHONPATH /opt/ros/melodic/lib/python2.7/dist-packages:$PYTHONPATH
-ENV ROS_DISTRO melodic
+# optionally, install some compiler packages if you want to e.g. build packages in a colcon_ws:
+#RUN mamba install compilers cmake pkg-config make ninja colcon-common-extensions
 
-# Install LibTorch, a C++ API of PyTorch
+# on Linux and osx (but not Windows) for ROS1 you might want to:
+RUN mamba install catkin_tools
+
+# reload environment to activate required scripts before running anything
+# on Windows, please restart the Anaconda Prompt / Command Prompt!
+#RUN conda deactivate
+#RUN conda activate ros_env
+
+# if you want to use rosdep, also do:
+RUN mamba install rosdep
+RUN rosdep init && rosdep update
+
+# Build LibTorch, a C++ API of PyTorch
 #  - Following the instruction in https://github.com/pytorch/pytorch/blob/master/docs/libtorch.rst
 #  - Use /opt/conda/bin/python because the default python can't locate necessary modules due to its configuration
 RUN cd /opt/pytorch/pytorch/ && mkdir build_libtorch && cd build_libtorch \
-    && /opt/conda/bin/python ../tools/build_libtorch.py
+    && python ../tools/build_libtorch.py
 
-RUN echo 'alias pt-python="/opt/conda/bin/python $@"' >> ~/.bashrc
+#RUN conda install pytorch torchvision -c pytorch
+
+#RUN echo 'alias pt-python="/opt/conda/bin/python $@"' >> ~/.bashrc
 
 # Set entry point
-RUN rm /ros_entrypoint.sh
-COPY ./ros_entrypoint.sh /ros_entrypoint.sh
-RUN chmod 755 /ros_entrypoint.sh
-
-RUN echo 'network_if=eth0' >> ~/.bashrc
-RUN echo 'export TARGET_IP=$(LANG=C /sbin/ifconfig $network_if | grep -Eo '"'"'inet (addr:)?([0-9]*\.){3}[0-9]*'"'"' | grep -Eo '"'"'([0-9]*\.){3}[0-9]*'"'"')' >> ~/.bashrc
-RUN echo 'if [ -z "$TARGET_IP" ] ; then' >> ~/.bashrc
-RUN echo '      echo "ROS_IP is not set."' >> ~/.bashrc
-RUN echo '      else' >> ~/.bashrc
-RUN echo '            export ROS_IP=$TARGET_IP' >> ~/.bashrc
-RUN echo '            fi' >> ~/.bashrc
-
-RUN apt update &&  \
-    apt install -y  ros-melodic-geometry2 \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*rm
- 
-
-ENTRYPOINT ["/ros_entrypoint.sh"]
+#RUN rm /ros_entrypoint.sh
+#COPY ./ros_entrypoint.sh /ros_entrypoint.sh
+#RUN chmod 755 /ros_entrypoint.sh
+#
+#ENTRYPOINT ["/ros_entrypoint.sh"]

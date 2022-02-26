@@ -14,7 +14,7 @@ services:
       - master
     build: .
     runtime: nvidia
-    image: aisl/pytorch-enet:20.03-py3
+    image: aisl/pytorch-enet:21.02-py3
     command: roslaunch pytorch_ros pytorch_enet_ros.launch image:=/kinect2/qhd/image_color_rect
     environment:
       - ROS_MASTER_URI=http://pytorch-ros-master:11311
@@ -30,9 +30,10 @@ services:
       - master
     build: .
     runtime: nvidia
-    image: aisl/pytorch-enet:20.03-py3
-    command: rosrun pytorch_ros pytorch_enet_ros_node.py
+    image: aisl/pytorch-enet:21.02-py3
+    #command: bash -c "conda run -n ros_env -c rosrun pytorch_ros pytorch_enet_ros_node.py"
     #command: which python3
+    command: bash
     environment:
       - ROS_MASTER_URI=http://pytorch-ros-master:11311
     volumes:
@@ -44,7 +45,7 @@ services:
     container_name: catkin-build
     build: .
     runtime: nvidia
-    image: aisl/pytorch-enet:20.03-py3
+    image: aisl/pytorch-enet:21.02-py3
     command: bash -c "source /opt/ros/melodic/setup.bash && cd /root/catkin_ws && catkin build -DCMAKE_BUILD_TYPE=Debug"
     environment:
       - CMAKE_PREFIX_PATH=/opt/ros/melodic:${CMAKE_PREFIX_PATH}
