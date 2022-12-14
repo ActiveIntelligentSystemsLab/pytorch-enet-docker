@@ -2,7 +2,7 @@ version: "2.3"
 services:
   master:
     container_name: pytorch-ros-master
-    image: ros:melodic-ros-core
+    image: ros:noetic
     command: roscore
     environment:
       - ROS_MASTER_URI=http://localhost:11311
@@ -31,18 +31,15 @@ services:
     build: .
     runtime: nvidia
     image: aisl/pytorch-enet:torch1.13.0-noetic
-    # command: bash -c "conda run -n ros_env -c rosrun pytorch_ros pytorch_enet_ros_node.py"
-    command: rosrun pytorch_ros pytorch_enet_ros_node.py
-    # command: which python3
-    # command: bash
+    command: bash -c "nvidia-smi && rosrun pytorch_ros pytorch_enet_ros_node.py"
     environment:
       - ROS_MASTER_URI=http://pytorch-ros-master:11311
-      # - PYTHONPATH=$PYTHONPATH:/root/catkin_ws/
+      - PYTHONPATH=${PYTHONPATH}:/root/catkin_ws/src/pytorch_enet_ros/models/espdnet/
     volumes:
       - ./catkin_ws/:/root/catkin_ws/
     stdin_open: true
     tty: true
-    shm_size: 1G
+    shm_size: 5G
 
   catkin-build:
     container_name: catkin-build

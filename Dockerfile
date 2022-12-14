@@ -1,6 +1,6 @@
 ARG VERSION
 # FROM nvidia/cudagl:11.2.2-devel
-FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu20.04
+FROM nvidia/cuda:11.7.0-cudnn8-devel-ubuntu20.04
 # FROM nvcr.io/nvidia/pytorch:22.11-py3 
 
 ENV ROS_DISTRO noetic
@@ -76,6 +76,8 @@ RUN chmod 777 /ros_entrypoint.sh
 # # Set environment variables
 ENV PATH /opt/ros/${ROS_DISTRO}/bin:/usr/local/cuda/bin:$PATH
 ENV PYTHONPATH /opt/ros/${ROS_DISTRO}/lib/python3/dist-packages:$PYTHONPATH
+
+RUN pip3 install scikit-image
 # 
 # 
 # ########## PyTorch ##########
