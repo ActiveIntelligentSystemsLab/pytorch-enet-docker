@@ -1,6 +1,6 @@
-NAME=aisl/pytorch-enet
-VERSION=20.03-py3
-CONTAINER_NAME=pytorch-enet
+NAME=jetson-rostorch-docker
+VERSION=r32.6.1
+CONTAINER_NAME=pytorch-ros
 
 build : 
 	docker build -t $(NAME):$(VERSION) .

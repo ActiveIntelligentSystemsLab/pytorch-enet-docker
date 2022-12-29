@@ -14,7 +14,7 @@ services:
       - master
     build: .
     runtime: nvidia
-    image: aisl/pytorch-enet:20.03-py3
+    image: jetson-rostorch-docker:r32.6.1
     command: roslaunch pytorch_ros pytorch_enet_ros.launch image:=/kinect2/qhd/image_color_rect
     environment:
       - ROS_MASTER_URI=http://master:11311
@@ -26,14 +26,12 @@ services:
 
   catkin-build:
     container_name: catkin-build
-    build: .
     runtime: nvidia
-    image: aisl/pytorch-enet:20.03-py3
-    command: bash -c "source /opt/ros/melodic/setup.bash && cd /root/catkin_ws && catkin build -DCMAKE_BUILD_TYPE=Debug"
+    image: jetson-rostorch-docker:r32.6.1
+    command: bash -c "catkin build -DCMAKE_BUILD_TYPE=Debug"
     environment:
       - CMAKE_PREFIX_PATH=/opt/ros/melodic:${CMAKE_PREFIX_PATH}
     volumes:
       - ./catkin_ws/:/root/catkin_ws/
-        #  - /media/data/dataset/matsuzaki:/tmp/dataset
     tty: true
     shm_size: 1G
