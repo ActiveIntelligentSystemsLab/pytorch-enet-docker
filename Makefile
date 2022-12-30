@@ -1,5 +1,5 @@
 NAME=jetson-rostorch-docker
-VERSION=r32.6.1
+VERSION=r35.1.0
 CONTAINER_NAME=pytorch-ros
 
 build : 
