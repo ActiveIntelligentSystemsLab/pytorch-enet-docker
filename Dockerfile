@@ -18,5 +18,7 @@ RUN apt update && apt upgrade -y \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*rm
 
+RUN pip3 install pyyaml
+
 COPY ./ros_entrypoint.sh /ros_entrypoint.sh
 ENTRYPOINT ["/ros_entrypoint.sh"]
