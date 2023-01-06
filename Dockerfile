@@ -6,7 +6,7 @@ ENV TORCH_PATH /usr/local/lib/python3.8/dist-packages/
 
 # Install ROS
 RUN apt purge -y *opencv*
-RUN apt update \
+RUN apt update && apt upgrade -y \
   && apt install -y \
   libopencv-dev=4.2.0+dfsg-5 \
   ros-${ROS_DISTRO}-image-transport \
