@@ -15,6 +15,8 @@ RUN apt update && apt upgrade -y \
   ros-${ROS_DISTRO}-tf2-geometry-msgs \
   ros-${ROS_DISTRO}-tf2-sensor-msgs \
   python3-catkin-tools \
+  libopencv-dev \
+  python3-opencv \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*rm
 
