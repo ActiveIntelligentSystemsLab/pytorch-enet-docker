@@ -24,6 +24,22 @@ services:
     tty: true
     shm_size: 1G
 
+  pytorch-ros-host:
+    container_name: pytorch-ros-node-host
+    build: .
+    runtime: nvidia
+    network_mode: "host"
+    image: jetson-rostorch-docker:r35.1.0
+    command: roslaunch pytorch_ros pytorch_enet_ros.launch image:=/kinect2/qhd/image_color_rect
+    environment:
+      - ROS_MASTER_URI=http://localhost:11311
+      - ROS_IP=133.15.23.103
+    volumes:
+      - ./catkin_ws/:/root/catkin_ws/
+      - /media/data/dataset/matsuzaki:/tmp/dataset
+    tty: true
+    shm_size: 1G
+
   catkin-build:
     container_name: catkin-build
     runtime: nvidia
