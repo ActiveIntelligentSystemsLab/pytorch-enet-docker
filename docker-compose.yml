@@ -31,7 +31,7 @@ services:
     build: .
     runtime: nvidia
     image: aisl/pytorch-enet:torch1.13.0-noetic
-    command: bash -c "nvidia-smi && rosrun pytorch_ros pytorch_enet_ros_node.py ~image:=/kinect2/qhd/image_color_rect"
+    command: bash -c "nvidia-smi && rosrun pytorch_ros pytorch_enet_ros_node.py image:=/kinect2/qhd/image_color_rect"
     environment:
       - ROS_MASTER_URI=http://pytorch-ros-master:11311
       - PYTHONPATH=${PYTHONPATH}:/root/catkin_ws/src/pytorch_enet_ros/espdnet/

@@ -63,7 +63,7 @@ RUN apt update && \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*rm
 
-RUN pip3 install scikit-image
+RUN pip3 install scikit-image tqdm
 
 # Set entry point
 COPY ./ros_entrypoint.sh /ros_entrypoint.sh
