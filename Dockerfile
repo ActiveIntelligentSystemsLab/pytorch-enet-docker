@@ -1,7 +1,5 @@
 ARG VERSION
-# FROM nvidia/cudagl:11.2.2-devel
 FROM nvidia/cuda:11.7.0-cudnn8-devel-ubuntu20.04
-# FROM nvcr.io/nvidia/pytorch:22.11-py3 
 
 ENV ROS_DISTRO noetic
 
@@ -27,12 +25,20 @@ RUN apt install -y git libssl-dev \
 RUN git clone --recursive https://github.com/Kitware/CMake && \
   cd CMake && ./bootstrap && make -j$(nproc) && make install
 
-RUN git clone --recursive https://github.com/pytorch/pytorch && \
+RUN git clone --recursive https://github.com/pytorch/pytorch -b v1.13.1 && \
   cd pytorch && \
   pip3 install -r requirements.txt && \
   python3 setup.py develop && \
   mkdir build_libtorch && cd build_libtorch \
   && python3 ../tools/build_libtorch.py
+
+RUN apt update && \
+  apt install -y \
+  libjpeg-turbo8-dev \
+  libpng-dev \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*rm
+
 RUN git clone --recursive https://github.com/pytorch/vision && \
   cd vision && \
   python3 setup.py install
