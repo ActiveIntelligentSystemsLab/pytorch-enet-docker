@@ -55,3 +55,18 @@ services:
       - ./catkin_ws/:/root/catkin_ws/ #  - /media/data/dataset/matsuzaki:/tmp/dataset
     tty: true
     shm_size: 1G
+
+  bash:
+    container_name: bash
+    build: .
+    runtime: nvidia
+    image: aisl/pytorch-enet:torch1.13.0-noetic
+    command: bash
+    environment:
+      - ROS_MASTER_URI=http://pytorch-ros-master:11311
+      - PYTHONPATH=${PYTHONPATH}:/root/catkin_ws/src/pytorch_enet_ros/espdnet/
+    volumes:
+      - ./catkin_ws/:/root/catkin_ws/
+    stdin_open: true
+    tty: true
+    shm_size: 5G
