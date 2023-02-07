@@ -22,6 +22,7 @@ RUN apt update && apt upgrade -y \
   && rm -rf /var/lib/apt/lists/*rm
 
 RUN pip3 install pyyaml
+ENV Torch_INST_ROOT "/usr/local/lib/python3.8/dist-packages/"
 
 COPY ./ros_entrypoint.sh /ros_entrypoint.sh
 ENTRYPOINT ["/ros_entrypoint.sh"]

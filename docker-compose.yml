@@ -8,6 +8,15 @@ services:
       - ROS_MASTER_URI=http://localhost:11311
     tty: true
 
+  bash:
+    container_name: pytorch-bash
+    image: jetson-rostorch-docker:r35.1.0
+    command: bash
+    environment:
+      - ROS_MASTER_URI=http://localhost:11311
+    tty: true
+
+
   pytorch-ros:
     container_name: pytorch-ros-node
     depends_on:
